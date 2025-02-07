@@ -14,7 +14,7 @@ namespace Order.API.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
-
+        //TO DO: add shoping card provided by cach propably preview of ordre, mayby in separte controller
         private readonly IMediator _mediator;
 
         public OrderController(IMediator mediator)
