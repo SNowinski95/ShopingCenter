@@ -7,7 +7,7 @@ namespace BuildingBlocks.Infrastructure.Queue
     {
         private readonly ConnectionFactory _factory = new() { HostName = hostName };
 
-        public async Task ConsumeMessageAsync(string queueName, string message, string key, AsyncEventHandler<BasicDeliverEventArgs> consumEventHandler)
+        public async Task ConsumeMessageAsync(string queueName, string key, AsyncEventHandler<BasicDeliverEventArgs> consumEventHandler)
         {
             if (_factory is null) throw new InvalidOperationException("Factory is not initialized");
             await using var connection = await _factory.CreateConnectionAsync();

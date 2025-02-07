@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Order.Domain.ValueObjects
 {
-    public record Product(ObjectId Id, int Quantity, Money price);
+    public record Product(ObjectId Id, int Quantity, Money price, string Name);
 }

@@ -8,7 +8,7 @@ namespace Order.Infrastructure.Proxy
     public interface IProductApi
     {
         //mayby add reservation status
-        //propably better use another object without price
+        //propably better use another object without price and name
         [Put("Product/Reservation")]
         Task<Customer> ReserveProducts([Body] List<Product> products);
 
