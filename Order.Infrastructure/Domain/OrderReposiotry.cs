@@ -16,25 +16,25 @@ namespace Order.Infrastructure.Domain
         }
 
         //Wrap exception to all
-        public async Task Add(Order.Domain.Enities.Order order, CancellationToken cancellationToken)
+        public async Task AddAsync(Order.Domain.Enities.Order order, CancellationToken cancellationToken = default)
         {
             await _collection.InsertOneAsync(order, cancellationToken: cancellationToken);
         }
 
-        public async ValueTask<Order.Domain.Enities.Order> GetById(ObjectId orderId, CancellationToken cancellationToken)
+        public async ValueTask<Order.Domain.Enities.Order> GetByIdAsync(string orderId, CancellationToken cancellationToken = default)
         {
-            return await _collection.Find(n => n.Id == orderId).SingleAsync(cancellationToken);
+            return await _collection.Find(n => n.Id == orderId).SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async Task UdateStatus(ObjectId id, PaymentStatus paymentStatus, CancellationToken cancellationToken)
+        public async Task UdateStatusAsync(string id, PaymentStatus paymentStatus, CancellationToken cancellationToken = default)
         {
             await _collection.UpdateOneAsync(n => n.Id == id, Builders<Order.Domain.Enities.Order>.Update.Set(n=>n.Payment.PaymentStatus, paymentStatus));
         }
         //move to filter object
-        public async ValueTask<IEnumerable<Order.Domain.Enities.Order>> GetFitered(ObjectId id,PaymentStatus? paymentStatus, DateTime? from, DateTime? to ,CancellationToken cancellationToken)
+        public async ValueTask<IEnumerable<Order.Domain.Enities.Order>> GetFiteredAsync(string customerId,PaymentStatus? paymentStatus, DateTime? from, DateTime? to ,CancellationToken cancellationToken = default)
         {
             var filterBuilder = Builders<Order.Domain.Enities.Order>.Filter;
-            var filter = filterBuilder.Eq(n => n.Id, id);
+            var filter = filterBuilder.Eq(n => n.CustomerDetails.CustomerId, customerId);
             if (paymentStatus != null) filter= filter & filterBuilder.Eq(n => n.Payment.PaymentStatus, paymentStatus);
             if(from != null && to != null)
             {

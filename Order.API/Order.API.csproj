@@ -9,13 +9,13 @@
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.1" />
-    <PackageReference Include="RestEase.HttpClientFactory" Version="1.6.4" />
     <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.1.0" />
     <PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Order.Application\Order.Application.csproj" />
+    <ProjectReference Include="..\Order.Mock.Infrastructure\Order.Mock.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,5 +8,6 @@ namespace Order.Domain.Enities
     {
         public Name Name { get; set; }
         public Adress Adress { get; set; }
+        public CustomerDetails MapToCustomerDetails() => new CustomerDetails(Id, Name, Adress);
     }
 }

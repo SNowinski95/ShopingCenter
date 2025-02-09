@@ -5,11 +5,11 @@ namespace Order.Application.Query.GetOrder
 {
     public class GetOrderQuery : IQuery<OrderDto>
     {
-        public GetOrderQuery(ObjectId orderId)
+        public GetOrderQuery(string orderId)
         {
             OrderId = orderId;
         }
 
-        public ObjectId OrderId { get; }
+        public string OrderId { get; }
     }
 }

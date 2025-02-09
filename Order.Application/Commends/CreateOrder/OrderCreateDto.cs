@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace Order.Application.Commends.CreateOrder
 {
-    public record OrderCreateDto(ObjectId customerId, OrderDetails orderDetails, List<Product> products);
+    public record OrderCreateDto(string customerId, OrderDetails orderDetails);
 }

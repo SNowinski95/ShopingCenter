@@ -6,10 +6,10 @@ namespace Order.Domain
 {
     public interface IOrderRepository
     {
-        Task Add(Enities.Order order,CancellationToken cancellationToken);
-        Task UdateStatus(ObjectId id, PaymentStatus paymentStatus, CancellationToken cancellationToken);
+        Task AddAsync(Enities.Order order, CancellationToken cancellationToken = default);
+        Task UdateStatusAsync(string id, PaymentStatus paymentStatus, CancellationToken cancellationToken = default);
 
-        ValueTask<Enities.Order?> GetById(ObjectId orderId, CancellationToken cancellationToken);
-        ValueTask<IEnumerable<Order.Domain.Enities.Order>> GetFitered(ObjectId id, PaymentStatus? paymentStatus, DateTime? from, DateTime? to, CancellationToken cancellationToken);
+        ValueTask<Enities.Order?> GetByIdAsync(string orderId, CancellationToken cancellationToken = default);
+        ValueTask<IEnumerable<Enities.Order>> GetFiteredAsync(string customerId, PaymentStatus? paymentStatus = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default);
     }
 }

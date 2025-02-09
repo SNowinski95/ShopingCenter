@@ -1,6 +1,50 @@
 @Order.API_HostAddress = http://localhost:5230
 
-GET {{Order.API_HostAddress}}/weatherforecast/
+GET {{Order.API_HostAddress}}/Order/67a91aaf4402f7fef4864c0c
 Accept: application/json
 
 ###
+POST {{Order.API_HostAddress}}/Order/
+Accept: application/json
+Content-Type: application/json
+{
+  "customerId": "60f8a9fecd8b2d4567896b13",
+  "orderDetails": {
+    "products": [
+      {
+        "id": "60f8a9fecd8b2d4567896b14",
+        "quantity": 2,
+        "price": {
+          "value": 49.99,
+          "currencyCode": "USD"
+        },
+        "name": "Product A"
+      },
+      {
+        "id": "60f8a9fecd8b2d4567896b15",
+        "quantity": 1,
+        "price": {
+          "value": 99.99,
+          "currencyCode": "USD"
+        },
+        "name": "Product B"
+      }
+    ]
+  }
+}
+###
+GET {{Order.API_HostAddress}}/Cart/67a91aaf4402f7fef4864c0c
+Accept: application/json
+###
+POST {{Order.API_HostAddress}}/Cart/67a91aaf4402f7fef4864c0c
+Accept: application/json
+Content-Type: application/json
+{
+"id": "60f8a9fecd8b2d4567896b14",
+"quantity": 2,
+"price": {
+    "value": 49.99,
+    "currencyCode": "USD"
+},
+"name": "Product A"
+}

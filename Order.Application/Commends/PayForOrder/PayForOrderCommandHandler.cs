@@ -1,30 +1,18 @@
-using Bottega.PhotoStock.BuildingBlocks.Application.Commands;
-using Bottega.PhotoStock.BuildingBlocks.Application.Database;
-using Bottega.PhotoStock.Sales.Domain.Orders;
+using Application.Orders.PayForOrder;
+using BuildingBlocks.Application.Commends;
 using MediatR;
 
-namespace Bottega.PhotoStock.Sales.Application.Orders.PayForOrder;
+namespace Application.Orders.PayForOrder;
 
-public class PayForOrderCommandHandler : ICommandHandler<PayForOrderCommand>
+public class PayForOrderCommandHandler : ICommandHandler<PayForOrderCommand, bool>
 {
-    private readonly IPaymentService _paymentService;
 
-    private readonly IOrderRepository _orderRepository;
-
-    public PayForOrderCommandHandler(IPaymentService paymentService, IOrderRepository orderRepository)
+    public PayForOrderCommandHandler()
     {
-        _paymentService = paymentService;
-        _orderRepository = orderRepository;
     }
 
-    public async Task<Unit> Handle(PayForOrderCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(PayForOrderCommand command, CancellationToken cancellationToken = default)
     {
-        await _paymentService.Pay(command.CustomerId, command.Amount);
-
-        var order = await _orderRepository.GetById(command.OrderId);
-
-        order!.MarkAsPaid();
-
-        return Unit.Value;
+        return true;
     }
 }

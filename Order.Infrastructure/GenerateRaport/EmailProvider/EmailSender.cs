@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Order.Infrastructure.GenerateRaport.EmailProvider
 {
-    public class EmailSender
+    public static class EmailSender
     {
-        public async Task SendFile(string reciver)
+        public static async Task SendFile(string reciver,string file)
         {
             //Send File To Email By Some Porivider
         }

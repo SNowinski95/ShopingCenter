@@ -1,8 +1,8 @@
-﻿using Bottega.PhotoStock.BuildingBlocks.Application.Commands;
+﻿using BuildingBlocks.Application.Commends;
 
-namespace Bottega.PhotoStock.Sales.Application.Orders.PayForOrder;
+namespace Application.Orders.PayForOrder;
 
-public class PayForOrderCommand : CommandBase, IEnqueueableCommand
+public class PayForOrderCommand : ICommand<bool>
 {
     public PayForOrderCommand(Guid customerId, decimal amount, Guid orderId)
     {

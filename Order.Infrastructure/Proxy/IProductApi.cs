@@ -10,7 +10,7 @@ namespace Order.Infrastructure.Proxy
         //mayby add reservation status
         //propably better use another object without price and name
         [Put("Product/Reservation")]
-        Task<Customer> ReserveProducts([Body] List<Product> products);
+        Task<bool> ReserveProducts([Body] List<Product> products, CancellationToken cancellationToken = default);
 
     }
 }

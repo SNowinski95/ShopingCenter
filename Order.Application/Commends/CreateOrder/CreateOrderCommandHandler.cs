@@ -25,17 +25,20 @@ public sealed class CreateOrderCommandHandler
         _productApi = productApi ?? throw new ArgumentNullException(nameof(productApi));
     }
 
-    public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
+    public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken = default)
     {
-        //propably better way is just take id and quantity of products after that get price from productAPI
+        //propably better way is just take id and quantity of products, after that get price from productAPI
         //TODO wrap operation on API
-        var user = await _userApi.GetUser(command.CustomerId);
-        var customerDetails = new CustomerDetails(command.CustomerId,user.Name, user.Adress);
+        var user = await _userApi.GetUser(command.CustomerId, cancellationToken);
         //check by product API if price are correct
-        var order = Domain.Enities.Order.Create(_timeProvider.GetUtcNow(), customerDetails, command.Products);
+        var order = Domain.Enities.Order.Create(_timeProvider.GetUtcNow(), user.MapToCustomerDetails(), command.OrderDetails.Products);
         //TODO wrap operation on repo
-        await _orderRepository.Add(order,cancellationToken);
-        await _productApi.ReserveProducts(command.Products);
+        await _orderRepository.AddAsync(order,cancellationToken);
+        if(!await _productApi.ReserveProducts(command.OrderDetails.Products, cancellationToken))
+        {
+            await _orderRepository.UdateStatusAsync(order.Id, PaymentStatus.Fail, cancellationToken);
+            return new CreateOrderResult(ResultStatus.Fail);
+        }
         return new CreateOrderResult(ResultStatus.Success);
 
     }

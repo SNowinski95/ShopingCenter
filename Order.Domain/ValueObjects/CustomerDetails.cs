@@ -3,5 +3,5 @@ using MongoDB.Bson;
 
 namespace Order.Domain.ValueObjects
 {
-    public record CustomerDetails(ObjectId CustomerId, Name Name, Adress Adress);
+    public record CustomerDetails(string CustomerId, Name Name, Adress Adress);
 }

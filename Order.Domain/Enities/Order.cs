@@ -17,7 +17,7 @@ namespace Order.Domain.Enities
         {
             return new Order
             {
-                Id = ObjectId.GenerateNewId(),
+                Id = ObjectId.GenerateNewId().ToString(),
                 CreatedTime = currentTime,
                 Payment = new Payment(PaymentStatus.WaitingForReservation),
                 CustomerDetails = customerDetails,
