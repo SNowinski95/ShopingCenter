@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using MongoDB.Bson;
+using Order.Domain;
+using Order.Domain.Enities;
 using Order.Domain.ValueObjects;
 using ZiggyCreatures.Caching.Fusion;
 
@@ -11,31 +12,22 @@ namespace Order.API.Controllers
     public class CartController : ControllerBase
     {
         //replace with redis
-        private readonly IMemoryCache _cache;
-        private const string CartName = "currentOrder";
-        public CartController(IMemoryCache cache)
+        private readonly IShopingCartRepository _shopingCartRepository;
+        public CartController(IShopingCartRepository shopingCartRepository)
         {
-            ArgumentNullException.ThrowIfNull(cache, nameof(cache));
+            ArgumentNullException.ThrowIfNull(shopingCartRepository, nameof(shopingCartRepository));
+            _shopingCartRepository = shopingCartRepository;
         }
-        
+
         [HttpPost("{customerId}")]
-        public async Task<ActionResult<List<Product>>> UpdateCart(string customerId, [FromBody] Product product, CancellationToken cancellationToken)
+        public async Task<ActionResult<ShopingCart>> UpdateCart(string customerId, [FromBody] Product product, CancellationToken cancellationToken)
         {
-            if (_cache.TryGetValue<List<Product>>(CartName, out var currentCart))
-            {
-                currentCart.Add(product);
-                _cache.Set($"{CartName}:{customerId.ToString()}", currentCart);
-                return currentCart;
-            }
-            var cacheEntry = _cache.CreateEntry($"{CartName}:{customerId.ToString()}");
-            currentCart = new List<Product>() { product };
-            cacheEntry.SetValue(currentCart);
-            return currentCart;
+            return await _shopingCartRepository.Add(product, customerId, cancellationToken);
         }
         [HttpGet("{customerId}")]
-        public async Task<ActionResult<List<Product>>> GetCart(string customerId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ShopingCart>> GetCart(string customerId, CancellationToken cancellationToken)
         {
-            return _cache.TryGetValue<List<Product>>(CartName, out var currentCart) ? currentCart : new List<Product>();
+            return await _shopingCartRepository.Get(customerId, cancellationToken);
         }
     }
 }

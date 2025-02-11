@@ -3,18 +3,25 @@ using RabbitMQ.Client;
 
 namespace BuildingBlocks.Infrastructure.Queue
 {
-    public class Consumer(string hostName) : IConsumer
+    public class Consumer : IConsumer
     {
-        private readonly ConnectionFactory _factory = new() { HostName = hostName };
+        private readonly QueueConfig _config;
+        private readonly ConnectionFactory _factory;
 
-        public async Task ConsumeMessageAsync(string queueName, string key, AsyncEventHandler<BasicDeliverEventArgs> consumEventHandler)
+        public Consumer(QueueConfig config)
         {
-            if (_factory is null) throw new InvalidOperationException("Factory is not initialized");
+            _config = config;
+            _factory = new() { HostName = _config.Host, Port= _config.Port, Password = _config.Password, UserName = _config.UserName };
+        }
+        
+
+        public async Task ConsumeMessageAsync(AsyncEventHandler<BasicDeliverEventArgs> consumEventHandler)
+        {
             await using var connection = await _factory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
             var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.ReceivedAsync += consumEventHandler;
-            await channel.BasicConsumeAsync(queueName, autoAck: true, consumer: consumer);
+            await channel.BasicConsumeAsync(_config.QueueName,  autoAck: true, consumer: consumer);
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ISender
     {
-        Task SendMessageAsync(string queueName, string message, string key);
+        Task SendMessageAsync(string message);
     }
 }

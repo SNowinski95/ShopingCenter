@@ -1,10 +1,5 @@
-using BuildingBlocks.Infrastructure.Queue;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.DependencyInjection;
 using Order.Application;
-using Order.Domain;
 using Order.Infrastructure.Configuration;
-using Order.Infrastructure.Domain;
 using Order.Infrastructure.JobScheduling;
 using Order.Infrastructure.Proxy;
 using Order.Infrastructure.ServiceExtension;
@@ -24,22 +19,23 @@ builder.Services.AddMongoDBCollections(builder.Configuration);
 //builder.Services.AddProxy(builder.Configuration);
 //Mock for IUserApi 
 builder.Services.AddScoped<IUserApi, UserApi>();
-builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies([typeof(Program).Assembly, ApplicationAssemblyReference.Assembly]); });
 //Mock for IProductApi 
 builder.Services.AddScoped<IProductApi, ProductApi>();
-builder.Services.AddTransient<IConsumer>(_=> new Consumer(builder.Configuration.GetValue<string>("RabbitMqHostName")));
-builder.Services.AddTransient<IRaportGenerator, RaportGenerator>();
-builder.Services.AddScoped<IOrderRepository, OrderReposiotry>();
-//TODO: register MongoDB table
+builder.Services.AddCache(builder.Configuration);
+builder.Services.AddConsumer<RaportQueueConfig>(builder.Configuration);
+builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies([typeof(Program).Assembly, ApplicationAssemblyReference.Assembly]); });
+
+builder.Services.AddSingleton<IRaportGenerator, RaportGenerator>();
+builder.Services.AddReposiotry();
 //TODO: add exception middleware
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+var raportGenerator =  app.Services.GetRequiredService<IRaportGenerator>();
+await raportGenerator.GenerateRaprot();
 app.MapControllers();
 
 app.Run();

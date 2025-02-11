@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Bson;
 using Order.Application.Commends.Create;
 using Order.Application.Commends.CreateOrder;
@@ -15,12 +16,11 @@ namespace Order.API.Controllers
     {
         //TO DO: add shoping card provided by cach propably preview of ordre, mayby in separte controller
         private readonly IMediator _mediator;
-
         public OrderController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -46,6 +46,7 @@ namespace Order.API.Controllers
         public async Task<ActionResult> Create([FromBody]OrderCreateDto orderCreate,CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new CreateOrderCommand(orderCreate), cancellationToken);
+            //clear cache
             return Ok(result);
         }
         
@@ -53,6 +54,7 @@ namespace Order.API.Controllers
         public async Task<ActionResult> UpdatePaymentStatus([FromBody] OrderUpdateStatusDto orderUpdateStatus, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+
         }
     }
 }
